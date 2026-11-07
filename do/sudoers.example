@@ -1,0 +1,8 @@
+# /etc/sudoers.d/vpsdo
+# This is the honest part: the vpsdo service user gets FULL sudo, because
+# run() is a shell and sudo is how it repairs things. The guardrails live
+# in the service design (default off, Telegram announcements, pre-work
+# backups, audit log, denylist), not in sudoers. If you are not comfortable
+# with this line existing on your box, do not install vps-do — install
+# vps-look instead and keep write access human-only.
+vpsdo ALL=(ALL) NOPASSWD: ALL

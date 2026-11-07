@@ -1,0 +1,27 @@
+# vps-do configuration. Copy to /etc/vps-do/config.toml and edit.
+# The service reads $VPS_DO_CONFIG if set, else /etc/vps-do/config.toml.
+
+[server]
+port = 18094
+bind = ["127.0.0.1", "172.17.0.1"]
+public_host = "mcp.example.com"
+
+[paths]
+install_dir = "/usr/local/lib/vps-do"
+config_dir = "/etc/vps-do"
+audit_log = "/var/log/vps-do/audit.log"
+backup_root = "/var/backups/vps-do"
+
+[backup]
+# Directories snapshotted before every work session (and by backup_now).
+data_dirs = ["/opt/your-app/data"]
+keep = 10
+
+[protect]
+# Extra paths the denylist treats as wipe targets and that you consider
+# sacred — usually your application's install and data directories.
+extra_paths = ["/opt/your-app"]
+
+[run]
+user_home = "/home/vpsdo"
+max_timeout_seconds = 600

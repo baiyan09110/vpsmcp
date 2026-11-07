@@ -1,0 +1,20 @@
+[Unit]
+Description=vps-do gated work connector (default OFF; started on demand by the owner)
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+User=vpsdo
+Group=vpsdo
+WorkingDirectory=/usr/local/lib/vps-do/app
+LoadCredential=key:/etc/vps-do/key
+ExecStart=/usr/bin/python3 /usr/local/lib/vps-do/app/server.py
+RuntimeMaxSec=2h
+PrivateTmp=yes
+# Deliberately NO ProtectSystem-style sandbox: a repair shell must be able
+# to write anywhere. The guardrails are the default-off state, the
+# announcements, the backups and the audit log — see README.md.
+
+[Install]
+# No WantedBy on purpose: the unit is installed DISABLED. A human starts
+# it (`systemctl start vps-do`) or the optional doorbell does.
