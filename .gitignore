@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+# Real configuration and credentials must never be committed:
+config.toml
+alert.env
+doorbell.env
+key
+*.key

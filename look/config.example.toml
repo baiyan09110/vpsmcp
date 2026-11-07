@@ -1,0 +1,43 @@
+# vps-look configuration. Copy to /etc/vps-look/config.toml and edit.
+# The service reads $VPS_LOOK_CONFIG if set, else /etc/vps-look/config.toml.
+
+[server]
+port = 18093
+# Loopback + the docker bridge address your reverse proxy container uses to
+# reach host services. Adjust the second entry to your setup (or drop it and
+# proxy to 127.0.0.1 from a host-network proxy instead).
+bind = ["127.0.0.1", "172.17.0.1"]
+# The public hostname your reverse proxy serves this connector on.
+public_host = "mcp.example.com"
+key_file = "/etc/vps-look/key"
+call_log = "/var/log/vps-look/calls.log"
+helper_dir = "/usr/local/lib/vps-look/helpers"
+
+[git]
+# The repository git_state reports on.
+repo = "/opt/your-app"
+upstream = "origin/main"
+
+[services]
+# Allowlists. logs() only accepts names from these two lists, and services()
+# reports exactly these. Container names as shown by `docker ps`.
+docker_containers = ["your-app-1", "your-app-worker-1"]
+systemd_units = ["docker.service", "ssh.service", "your-app-sidecar.service"]
+
+[env_flags]
+# env_flags() reads ONLY these variable names from this one container.
+# Leave names empty to disable the tool.
+container = "your-app-1"
+names = ["FEATURE_X_ENABLED", "WORKER_MODE"]
+# Optional: value the code falls back to when a flag is unset, so the tool
+# can say "not set; code default applies" instead of guessing.
+[env_flags.defaults]
+FEATURE_X_ENABLED = "false"
+
+[json_config]
+# Optional: a JSON config file json_config() may return (secret-looking
+# values are redacted). Leave empty to disable the tool.
+path = "/opt/your-app/data/config.json"
+
+[health]
+url = "http://127.0.0.1:8000/health"

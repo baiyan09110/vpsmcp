@@ -1,0 +1,13 @@
+# /etc/sudoers.d/vps-look
+# The vpslook service user may run ONLY these root-owned helper scripts,
+# with no arguments at all except where the script path is listed with its
+# argument slots. Install root-owned, mode 0440, and validate with visudo.
+#
+# logs.sh takes <service> <lines>; the sudoers wildcard below permits the
+# arguments, and the script itself enforces the allowlist and the 1..300
+# range — sudoers cannot express those, the script can.
+vpslook ALL=(root) NOPASSWD: /usr/local/lib/vps-look/helpers/git_state.sh
+vpslook ALL=(root) NOPASSWD: /usr/local/lib/vps-look/helpers/services.sh
+vpslook ALL=(root) NOPASSWD: /usr/local/lib/vps-look/helpers/logs.sh *
+vpslook ALL=(root) NOPASSWD: /usr/local/lib/vps-look/helpers/env_flags.sh
+vpslook ALL=(root) NOPASSWD: /usr/local/lib/vps-look/helpers/json_config.sh

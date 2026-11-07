@@ -1,0 +1,25 @@
+[Unit]
+Description=vps-look read-only MCP connector
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+User=vpslook
+Group=vpslook
+WorkingDirectory=/usr/local/lib/vps-look/app
+ExecStart=/usr/bin/python3 /usr/local/lib/vps-look/app/server.py
+Restart=on-failure
+RestartSec=3
+ProtectHome=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/var/log/vps-look
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LockPersonality=yes
+# NOTE: no NoNewPrivileges here — the service needs sudo to run its helpers.
+
+[Install]
+WantedBy=multi-user.target
