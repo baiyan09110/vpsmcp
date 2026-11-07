@@ -60,6 +60,34 @@ in logs (the examples keep proxy access logging off for these paths),
 never be committed, and should be rotated if it leaks. If you need real
 per-user authentication, don't use this as-is.
 
+## Which clients can connect
+
+The connectors speak standard remote MCP (Streamable HTTP) with a path
+key and no OAuth. Any client that lets you add a custom remote MCP server
+*without* sign-in can use them — Claude (web / desktop / mobile), Cursor,
+VS Code, and CLI agents that take a server URL in their config (e.g.
+Gemini CLI, Codex) all work this way.
+
+Clients that can't, or need help:
+
+- **Local-only clients** (stdio servers only): put a stdio↔HTTP bridge
+  such as `mcp-remote` between the client and the connector URL.
+- **Clients that require OAuth** for remote servers: these connectors
+  deliberately run no authorization server (see above), so such clients
+  will refuse them.
+- **Managed or workplace accounts**: an admin or a plan may disable
+  custom connectors entirely. That is a policy wall, not a technical one.
+- **Sandboxed agents** without general outbound network access cannot
+  reach the URL at all.
+
+Two properties worth knowing:
+
+- **The guardrails live on the server, not in the client.** Whichever
+  model connects to vps-do gets the same announcements, denylist,
+  backups and 2-hour limit.
+- **No client can start vps-do.** Waking it is a human action (SSH, or
+  the doorbell) — by design.
+
 ## Layout
 
 ```
