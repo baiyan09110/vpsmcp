@@ -72,6 +72,30 @@ sudo systemctl status vps-do   # should say disabled / inactive
 Proxy it next to vps-look (see `../examples/caddy.example`) at
 `https://<public_host>/vps-do/<key>/mcp` and add it as a second connector.
 
+## What the Telegram alerts look like
+
+Every command produces two messages on your alert chat — one *before*
+it runs, one after — and a denied command produces one as well:
+
+```
+▶️ vps-do EXEC
+cmd: systemctl status myapp
+```
+```
+⏹ vps-do DONE rc=0 dur=0.4s
+cmd: systemctl status myapp
+```
+```
+⛔ vps-do DENIED (denylist: recursive delete at filesystem root)
+cmd: rm -rf /
+```
+
+Session start sends a backup report first; if that report cannot be
+delivered, the service will not start accepting commands. And if a
+pre-execution alert fails to send, the command is **refused** — the
+alert channel failing closed is the whole point: if you cannot see what
+it does, it does not get to do anything.
+
 ## A work session
 
 ```bash
