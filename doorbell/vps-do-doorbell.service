@@ -1,0 +1,20 @@
+[Unit]
+Description=vps-do doorbell (Telegram code switch for vps-do)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/lib/vps-do/bin/doorbell.py
+Restart=always
+RestartSec=5
+StateDirectory=vps-do-doorbell
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+# No ProtectSystem sandbox: the doorbell must drive systemctl and read
+# its root-only config in /etc/vps-do. It opens no listening sockets;
+# its only network traffic is outbound polling to api.telegram.org.
+
+[Install]
+WantedBy=multi-user.target

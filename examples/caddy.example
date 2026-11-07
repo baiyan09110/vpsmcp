@@ -1,0 +1,22 @@
+# Caddy: expose both connectors on one host, next to your app.
+# The <key> segments are the contents of /etc/vps-look/key and
+# /etc/vps-do/key on the box. Caddy is assumed to run in a container here
+# (172.17.0.1 is the host from the container's network); from a
+# host-installed proxy, use 127.0.0.1 instead.
+#
+# IMPORTANT: keep access logging OFF for these paths (the default in this
+# snippet — Caddy logs nothing unless you add a `log` block). The URL is
+# the credential; it must not land in a log file.
+
+mcp.example.com {
+    handle /vps-look/* {
+        reverse_proxy 172.17.0.1:18093
+    }
+
+    handle /vps-do/* {
+        reverse_proxy 172.17.0.1:18094
+    }
+
+    # your app, everything else
+    reverse_proxy your-app:8000
+}

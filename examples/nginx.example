@@ -1,0 +1,31 @@
+# nginx equivalent of caddy.example. Mind the access log: the connector
+# URL is the credential, so these locations log to /dev/null.
+
+server {
+    listen 443 ssl;
+    server_name mcp.example.com;
+
+    # ssl_certificate / ssl_certificate_key …
+
+    location /vps-look/ {
+        access_log off;
+        proxy_pass http://127.0.0.1:18093;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_buffering off;          # streamable HTTP / SSE friendly
+        proxy_read_timeout 3600s;
+    }
+
+    location /vps-do/ {
+        access_log off;
+        proxy_pass http://127.0.0.1:18094;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_buffering off;
+        proxy_read_timeout 3600s;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;   # your app
+    }
+}
